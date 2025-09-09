@@ -160,8 +160,10 @@ Write-Host "Update scheduled task set to: $Updatetasktoo"
 # Check if we have an active internet connection
 $InternetAvailable = $false
 try {
-    $pingTest = Test-Connection -ComputerName "8.8.8.8" -Count 1 -Quiet
-    if ($pingTest) { $InternetAvailable = $true }
+    $pingGoogle = Test-Connection -ComputerName "8.8.8.8" -Count 1 -Quiet
+    $pingLocal  = Test-Connection -ComputerName "10.14.24.1" -Count 1 -Quiet
+
+    if ($pingGoogle -or $pingLocal) {$InternetAvailable = $true}
 } catch {
     Write-Host "Internet check failed. Falling back to local SMB."
      Stop-Transcript;exit 1
