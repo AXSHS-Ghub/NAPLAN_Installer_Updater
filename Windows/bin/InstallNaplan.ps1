@@ -88,7 +88,7 @@ $dlurls = "https://www.assessform.edu.au/naplan-online/locked-down-browser"
 
 $napnukeurl = "https://raw.githubusercontent.com/MacsInSpace/NAPLAN_Installer_Updater/refs/heads/$BranchName/Windows/bin/NAPLANnuke.ps1"
 
-$scheduledtaskurl = "https://raw.githubusercontent.com/MacsInSpace/NAPLAN_Installer_Updater/refs/heads/$BranchName/Windows/bin/NAPLANscheduledtask.ps1"
+$scheduledtaskurl = "https://raw.githubusercontent.com/AXSHS-Ghub/NAPLAN_Installer_Updater/refs/heads/$BranchName/Windows/bin/NAPLANscheduledtask.ps1"
 
 $StoragePath = Join-Path $env:ProgramData "Naplan"
 
