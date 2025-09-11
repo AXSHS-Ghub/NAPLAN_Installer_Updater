@@ -9,10 +9,10 @@
 $BranchName = "main"
 
 # Force an update (uninstall and reinstall regardless of time, date)
-$ForceUpdate = $true # default to $false. # $true will force the update regardless of version number
+$ForceUpdate = $false # default to $false. # $true will force the update regardless of version number
 
 # Force an update of the scheduled task
-$Updatetasktoo = $true #default to $false. # true will force the update task.
+$Updatetasktoo = $false #default to $false. # true will force the update task.
 
 #=======================================================================
 #CHECK IF SCRIPT IS RUN AS ADMINISTRATOR
