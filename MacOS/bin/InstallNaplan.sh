@@ -93,7 +93,7 @@ log() {
 check_internet () {
 # Ensure we have internet
 #ping -c 1 8.8.8.8 &>/dev/null
-curl -s -i -v "$PKG_URL"
+curl -s -i -v "$PKG_URL" &>/dev/null
 if [ $? -ne 0 ]; then
         echo "No internet connection. Exiting." >> $LOG_FILE
     exit 1
