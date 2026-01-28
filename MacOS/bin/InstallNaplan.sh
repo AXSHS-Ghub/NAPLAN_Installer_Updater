@@ -98,6 +98,7 @@ if [ $? -ne 0 ]; then
     if [ $? -ne 0 ]; then
         echo "No internet connection. Exiting." >> $LOG_FILE
     exit 1
+    fi
 fi
 }
 
