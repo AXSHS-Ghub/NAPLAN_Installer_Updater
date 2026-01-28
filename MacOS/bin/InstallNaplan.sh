@@ -90,26 +90,13 @@ log() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
 }
 
-check_internet() {
-    # Ensure we have internet. Return 0 if OK, otherwise log and exit 1.
-    # Prefer curl (with short timeout); fall back to ping.
-    if command -v curl >/dev/null 2>&1; then
-        if curl --silent --fail --head --max-time 5 "https://clients3.google.com/generate_204" >/dev/null 2>&1; then
-            log "Internet connectivity confirmed (curl)."
-            return 0
-        else
-            log "No internet connection (curl test failed)."
-            exit 1
-        fi
-    else
-        # Fallback to ping (single probe). Use 1 ping to 8.8.8.8.
-        if ping -c 1 8.8.8.8 >/dev/null 2>&1; then
-            log "Internet connectivity confirmed (ping)."
-            return 0
-        else
-            log "No internet connection (ping test failed)."
-            exit 1
-        fi
+check_internet () {
+# Ensure we have internet
+#ping -c 1 8.8.8.8 &>/dev/null
+curl -s -i -v "$PKG_URL"
+if [ $? -ne 0 ]; then
+        echo "No internet connection. Exiting." >> $LOG_FILE
+    exit 1
     fi
 }
 
