@@ -197,8 +197,8 @@ install_naplan_ldb() {
     # Check the certificate name
     signer=$(pkgutil --check-signature "$PKG_PATH" | grep "Developer ID Installer" | awk -F': ' '{print $2}')
 
-    if [[ "$signer" != *"Acara"* ]]; then
-    echo "WARNING: PKG is NOT signed by JANISON. Exiting."
+    if [[ "$signer" != *"Janison"* ]]; then
+    echo "WARNING: PKG is NOT signed by Janison. Exiting."
         exit 1
     fi
 
