@@ -11,12 +11,12 @@ PKG_NAME="NAP_LDB.pkg"
 PKG_PATH="$DOWNLOAD_DIR/$PKG_NAME"
 LOG_FILE="/var/log/naplan_update.log"
 PLIST_BUNDLE="NAP Locked down browser.app"
-FORCE_NEW_VERSION=false
-UPDATETASKTOO=false
+FORCE_NEW_VERSION=true
+UPDATETASKTOO=true
 PROXY_SCRIPT_WEBPATH="https://raw.githubusercontent.com/MacsInSpace/NAPLAN_Installer_Updater/refs/heads/main/MacOS/conf/proxy.sh"
 FORCE_UPDATE_LAUNCHD=false
 FORCE_UPDATE_PROXY_SCRIPT=false
-FORCE_UPDATE_NAPLAN=false
+FORCE_UPDATE_NAPLAN=true
 PROXY_SCRIPT_PATH="/usr/local/bin/proxy.sh"
 
 if [[ -f $PROXY_SCRIPT_PATH ]]; then
