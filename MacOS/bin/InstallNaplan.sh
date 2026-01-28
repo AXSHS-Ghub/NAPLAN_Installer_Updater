@@ -92,12 +92,14 @@ log() {
 
 check_internet () {
 # Ensure we have internet
-#ping -c 1 8.8.8.8 &>/dev/null
-curl -s -i -v "$PKG_URL" &>/dev/null
+ping -c 1 8.8.8.8 
 if [ $? -ne 0 ]; then
-        echo "No internet connection. Exiting." >> $LOG_FILE
-    exit 1
+    ping -c 1 10.14.24.1
+    if [ $? -ne 0 ]; then
+         echo "No internet connection. Exiting." >> $LOG_FILE
+         exit 1
     fi
+fi
 }
 
 check_for_rosetta () {
