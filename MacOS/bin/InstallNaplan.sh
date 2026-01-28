@@ -185,6 +185,11 @@ fi
 
 install_naplan_ldb() {
 
+#Attempt to download 2026 package via fixed link if automatic check fails
+    if ! pkgutil --check-signature "$PKG_PATH"; then
+        curl -L -o "/tmp/NAP_LDB.pkg" "https://pages.assessform.edu.au/uploads/files/Release/NAP%20Locked%20down%20browser%20-%20Release%20-%205.10.5.pkg"
+    fi
+    
     if ! pkgutil --check-signature "$PKG_PATH"; then
         echo "Invalid or missing PKG signature. Exiting." | tee -a /var/log/naplan_update.log
         exit 1
@@ -211,7 +216,7 @@ echo "PKG signature is valid. Proceeding with installation..."
         rm -f "$PKG_PATH"
         if [ $UPDATETASKTOO ]; then
         echo "SelfUpdating the launchd." >> $LOG_FILE
-        curl -sSL "https://raw.githubusercontent.com/MacsInSpace/NAPLAN_Installer_Updater/testing/MacOS/InstallLaunchDaemon.sh" | sudo bash
+        curl -sSL "https://raw.githubusercontent.com/AXSHS-Ghub/NAPLAN_Installer_Updater/testing/MacOS/InstallLaunchDaemon.sh" | sudo bash
         fi
     else
         echo "Installation failed." >> $LOG_FILE
