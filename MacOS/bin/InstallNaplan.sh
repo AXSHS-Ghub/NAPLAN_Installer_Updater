@@ -90,16 +90,27 @@ log() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
 }
 
-check_internet () {
-# Ensure we have internet
-ping -c 1 8.8.8.8 &>/dev/null
-if [ $? -ne 0 ]; then
-    ping -c 10.14.24.1 &>/dev/null
-    if [ $? -ne 0 ]; then
-        echo "No internet connection. Exiting." >> $LOG_FILE
-    exit 1
+check_internet() {
+    # Ensure we have internet. Return 0 if OK, otherwise log and exit 1.
+    # Prefer curl (with short timeout); fall back to ping.
+    if command -v curl >/dev/null 2>&1; then
+        if curl --silent --fail --head --max-time 5 "https://clients3.google.com/generate_204" >/dev/null 2>&1; then
+            log "Internet connectivity confirmed (curl)."
+            return 0
+        else
+            log "No internet connection (curl test failed)."
+            exit 1
+        fi
+    else
+        # Fallback to ping (single probe). Use 1 ping to 8.8.8.8.
+        if ping -c 1 8.8.8.8 >/dev/null 2>&1; then
+            log "Internet connectivity confirmed (ping)."
+            return 0
+        else
+            log "No internet connection (ping test failed)."
+            exit 1
+        fi
     fi
-fi
 }
 
 check_for_rosetta () {
@@ -126,12 +137,12 @@ fi
 check_internet
 PKG_URL=$(echo "$PKG_URL" | sed 's/%20/ /g') >> $LOG_FILE
 LATEST_URL=$(curl -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36" \
-    -H "Accept-Language: en-US,en;q=0.9" \
-    -H "Referer: $PKG_URL" \
-    -H "Connection: keep-alive" \
-    -H "Cache-Control: no-cache, no-store, must-revalidate" \
-    -H "Pragma: no-cache" \
-    -H "Expires: 0" \
+    -H "Accept-Language: en-US,en;q=0.9" \ 
+    -H "Referer: $PKG_URL" \ 
+    -H "Connection: keep-alive" \ 
+    -H "Cache-Control: no-cache, no-store, must-revalidate" \ 
+    -H "Pragma: no-cache" \ 
+    -H "Expires: 0" \ 
     --compressed -s "$PKG_URL" 2>/var/log/naplan_update.log | grep -oE 'https://[^"]+\.pkg' | head -n 1) >> $LOG_FILE
     
 if [ -z "$LATEST_URL" ]; then
@@ -141,8 +152,6 @@ fi
 echo "Url is $LATEST_URL" >> $LOG_FILE
 LATEST_VERSION=$(echo "$LATEST_URL" | grep -oE '[0-9]+(\.[0-9]+)*')
 echo "Latest version: $LATEST_VERSION" >> $LOG_FILE
-
-
 
 
 INSTALLED_VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "/Applications/$PLIST_BUNDLE/Contents/Info.plist" 2>/dev/null)
@@ -159,7 +168,6 @@ fi
 
 
 
-
 # Uninstall NAPLAN Locked Down Browser if it exists
 echo "Uninstalling App" >> $LOG_FILE
 rm -r "$HOME/.config/NAP Locked down browser"
@@ -167,9 +175,6 @@ rm -r "$HOME/.local/share/NAP Locked down browser"
 rm -r "/Applications/NAP Locked down browser.app"
 rm -r "/Applications/NAP Locked down browser Uninstaller.app"
 echo "Uninstall Complete" >> $LOG_FILE
-
-
-
 
 
 dl_naplan_ldb() {
@@ -183,7 +188,6 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 }
-
 
 
 install_naplan_ldb() {
@@ -255,8 +259,6 @@ else
     # Perform installation or update
     install_naplan_ldb
 fi
-
-
 
 
 exit 0
