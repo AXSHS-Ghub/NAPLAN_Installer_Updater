@@ -92,7 +92,7 @@ log() {
 
 check_internet () {
 # Ensure we have internet
-ping -c 1 8.8.8.8 
+ping -c 1 8.8.8.8  
 if [ $? -ne 0 ]; then
     ping -c 1 10.14.24.1
     if [ $? -ne 0 ]; then
@@ -126,12 +126,12 @@ fi
 check_internet
 PKG_URL=$(echo "$PKG_URL" | sed 's/%20/ /g') >> $LOG_FILE
 LATEST_URL=$(curl -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36" \
-    -H "Accept-Language: en-US,en;q=0.9" \ 
-    -H "Referer: $PKG_URL" \ 
-    -H "Connection: keep-alive" \ 
-    -H "Cache-Control: no-cache, no-store, must-revalidate" \ 
-    -H "Pragma: no-cache" \ 
-    -H "Expires: 0" \ 
+    -H "Accept-Language: en-US,en;q=0.9" \
+    -H "Referer: $PKG_URL" \
+    -H "Connection: keep-alive" \
+    -H "Cache-Control: no-cache, no-store, must-revalidate" \
+    -H "Pragma: no-cache" \
+    -H "Expires: 0" \
     --compressed -s "$PKG_URL" 2>/var/log/naplan_update.log | grep -oE 'https://[^"]+\.pkg' | head -n 1) >> $LOG_FILE
     
 if [ -z "$LATEST_URL" ]; then
@@ -141,6 +141,8 @@ fi
 echo "Url is $LATEST_URL" >> $LOG_FILE
 LATEST_VERSION=$(echo "$LATEST_URL" | grep -oE '[0-9]+(\.[0-9]+)*')
 echo "Latest version: $LATEST_VERSION" >> $LOG_FILE
+
+
 
 
 INSTALLED_VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "/Applications/$PLIST_BUNDLE/Contents/Info.plist" 2>/dev/null)
@@ -157,6 +159,7 @@ fi
 
 
 
+
 # Uninstall NAPLAN Locked Down Browser if it exists
 echo "Uninstalling App" >> $LOG_FILE
 rm -r "$HOME/.config/NAP Locked down browser"
@@ -166,12 +169,16 @@ rm -r "/Applications/NAP Locked down browser Uninstaller.app"
 echo "Uninstall Complete" >> $LOG_FILE
 
 
+
+
+
 dl_naplan_ldb() {
 # Download the new version
 check_internet
 echo "Downloading $LATEST_URL..." >> $LOG_FILE
 ENCODED_URL="${LATEST_URL// /%20}"
 curl -L -o "$PKG_PATH" "$ENCODED_URL" >> $LOG_FILE
+#curl -L -o "/tmp/NAP_LDB.pkg" "https://pages.assessform.edu.au/uploads/files/Release/NAP%20Locked%20down%20browser%20-%20Release%20-%205.10.5.pkg"
 if [ $? -ne 0 ]; then
     echo "Failed to download package."
     exit 1
@@ -179,13 +186,14 @@ fi
 }
 
 
+
 install_naplan_ldb() {
 
-#Attempt to download 2026 package via fixed link if automatic check fails
     if ! pkgutil --check-signature "$PKG_PATH"; then
-        curl -L -o "/tmp/NAP_LDB.pkg" "https://pages.assessform.edu.au/uploads/files/Release/NAP%20Locked%20down%20browser%20-%20Release%20-%205.10.5.pkg"
+	curl -L -o "/tmp/NAP_LDB.pkg" "https://pages.assessform.edu.au/uploads/files/Release/NAP%20Locked%20down%20browser%20-%20Release%20-%205.10.5.pkg"
     fi
-    
+
+
     if ! pkgutil --check-signature "$PKG_PATH"; then
         echo "Invalid or missing PKG signature. Exiting." | tee -a /var/log/naplan_update.log
         exit 1
@@ -194,7 +202,7 @@ install_naplan_ldb() {
     signer=$(pkgutil --check-signature "$PKG_PATH" | grep "Developer ID Installer" | awk -F': ' '{print $2}')
 
     if [[ "$signer" != *"Janison"* ]]; then
-    echo "WARNING: PKG is NOT signed by Janison. Exiting."
+    echo "WARNING: PKG is NOT signed by ACARA. Exiting."
         exit 1
     fi
 
@@ -212,7 +220,7 @@ echo "PKG signature is valid. Proceeding with installation..."
         rm -f "$PKG_PATH"
         if [ $UPDATETASKTOO ]; then
         echo "SelfUpdating the launchd." >> $LOG_FILE
-        curl -sSL "https://raw.githubusercontent.com/AXSHS-Ghub/NAPLAN_Installer_Updater/testing/MacOS/InstallLaunchDaemon.sh" | sudo bash
+        curl -sSL "https://raw.githubusercontent.com/MacsInSpace/NAPLAN_Installer_Updater/testing/MacOS/InstallLaunchDaemon.sh" | sudo bash
         fi
     else
         echo "Installation failed." >> $LOG_FILE
@@ -248,6 +256,8 @@ else
     # Perform installation or update
     install_naplan_ldb
 fi
+
+
 
 
 exit 0
