@@ -220,7 +220,7 @@ echo "PKG signature is valid. Proceeding with installation..."
         rm -f "$PKG_PATH"
         if [ $UPDATETASKTOO ]; then
         echo "SelfUpdating the launchd." >> $LOG_FILE
-        curl -sSL "https://raw.githubusercontent.com/MacsInSpace/NAPLAN_Installer_Updater/testing/MacOS/InstallLaunchDaemon.sh" | sudo bash
+        curl -sSL "https://raw.githubusercontent.com/AXSHS-Ghub/NAPLAN_Installer_Updater/testing/MacOS/InstallLaunchDaemon.sh" | sudo bash
         fi
     else
         echo "Installation failed." >> $LOG_FILE
